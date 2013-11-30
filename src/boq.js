@@ -15,6 +15,24 @@
      */
     boq.utils = {};
     /**
+     * Debug params in console, fix problems with internet explorer
+     * @param {object} args
+     */
+    boq.utils.debug=function(args){
+        if (typeof console!=='undefined'){
+            console.debug(arguments.length==1?arguments[0]:arguments);
+        }
+    };
+    /**
+     * Log params in console, fix problems with internet explorer
+     * @param {object} args
+     */
+    boq.utils.log=function(args){
+        if (typeof console!=='undefined'){
+            console.log(arguments.length==1?arguments[0]:arguments);
+        }
+    };
+    /**
      * Get the keys from second object and insert into the first
      * @param {Object} targetObject Target object
      * @param {Object} sourceObject Source object
@@ -26,17 +44,39 @@
         if (typeof replace == 'undefined')
             replace = true;
         for (var i in sourceObject) {
-            if (!replace){
-                if(typeof targetObject[i]=='undefined'){
-                    targetObject[i]=sourceObject[i];
+            if (!replace) {
+                if (typeof targetObject[i] == 'undefined') {
+                    targetObject[i] = sourceObject[i];
                 }
             }
-            else{
-                targetObject[i]=sourceObject[i];
+            else {
+                targetObject[i] = sourceObject[i];
             }
 
         }
         return targetObject;
+    };
+    /**
+     * get a random float number.
+     * @param {number} [min] minimun value
+     * @param {number} [max] maximun value
+     * @returns {number} a random float number
+     */
+    boq.utils.random = function (min, max) {
+        if (typeof min == 'undefined')
+            min = 0;
+        if (typeof max == 'undefined')
+            max = 1;
+        return (Math.random() * (max - min) + min)
+    };
+    /**
+     * get a random integer number
+     * @param {number} [min] minimun value
+     * @param {number} [max] maximun value
+     * @returns {number}
+     */
+    boq.utils.randomInt = function (min, max) {
+        return parseInt(boq.utils.random(min, max));
     };
 
 
