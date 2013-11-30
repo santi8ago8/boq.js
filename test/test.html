@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Boq.js tests</title>
+    <script src="../src/boq.js" type="text/javascript"></script>
+</head>
+<body>
+<p>Open console</p>
+
+<script type="text/javascript">
+    var log = function () {
+        console.log(arguments);
+    };
+    log(Boq);
+    var debug = function () {
+        console.debug(arguments)
+    };
+
+    (function () {
+        debug("Testing utils.extends");
+        var target = {};
+        var source = {
+            main: 1, name: "look", funct: function () {
+            }};
+        Boq.utils.extends(target, source);
+        log("Resultant object:", target);
+        var source2 = {
+            main: 2, name: "look2", funct: function () {
+                3;
+            }};
+        boq.utils.extends(target, source2, true);
+        log("Second resultant:", target);
+        var source3 = {
+            main: 3, name: "look3", funct: function () {
+                3;
+            }};
+        boq.utils.extends(target, source3, false);
+        log("Three resultant:", target);
+    }());
+
+
+</script>
+</body>
+</html>
