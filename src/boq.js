@@ -13,7 +13,7 @@
      * Util functions
      * @type {{}}
      */
-    boq.utils = {
+    boq.utils = boq.u = {
         /**
          * Debug params in console, fix problems with internet explorer
          * @param {object} args
@@ -21,7 +21,7 @@
         debug: function (args) {
             //control for internet explorer
             if (typeof console !== 'undefined') {
-                console.debug(arguments.length == 1 ? arguments[0] : arguments);
+                console.debug.apply(console, arguments);
             }
         },
         /**
@@ -31,7 +31,7 @@
         log: function (args) {
             //control for internet explorer
             if (typeof console !== 'undefined') {
-                console.log(arguments.length == 1 ? arguments[0] : arguments);
+                console.log.apply(console, arguments);
             }
         },
         /**
@@ -81,6 +81,15 @@
          */
         randomInt: function (min, max) {
             return parseInt(boq.utils.random(min, max));
+        },
+        /**
+         * get an boq.Array with document.querySelector
+         * @param query query selector
+         * @returns {boq.Array}
+         */
+        qs: function (query) {
+            var res = document.querySelectorAll(query);
+            return new boq.Array(res);
         }
     };
 
@@ -134,13 +143,16 @@
          * reverse array
          * @returns {boq.Array}
          */
-        self.reverse = function(){
-            return self.each(self.length-1,-1);
+        self.reverse = function () {
+            return self.each(self.length - 1, -1);
         };
 
         return self;
     };
 
-
     window.Boq = window.boq = boq;
+    if (typeof window.b === 'undefined')
+        window.b = boq;
+    if (typeof window._b === 'undefined')
+        window._b = boq;
 }(window));
