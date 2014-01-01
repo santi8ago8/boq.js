@@ -134,6 +134,9 @@
                 if (res || typeof res === 'undefined') {
                     result.push(self[i]);
                 }
+                if (res === 'break') {
+                    break;
+                }
 
             }
             return result;
@@ -147,8 +150,144 @@
             return self.each(self.length - 1, -1);
         };
 
+        if (!self.indexOf) {
+            /**
+             * Find the object into the array
+             * @param {object} findElement element to find
+             * @returns {number} the index of the element
+             */
+            self.indexOf = function (findElement) {
+                var index = -1;
+                self.each(function (it, ind) {
+                    if (findElement == it) {
+                        index = ind;
+                        return 'break';
+                    }
+                    else
+                        return false;
+                });
+                return index;
+            }
+        }
+
+        /**
+         *
+         * @param {object} element element to remove from array
+         * @param {function} [compareFunction]
+         * @returns {boq.Array} resultant array
+         */
+        self.without = function (element, compareFunction) {
+            if (!compareFunction)
+                compareFunction = function (it) {
+                    return !(it === element);
+                };
+            return self.each(compareFunction);
+        };
+        /**
+         * compare with another array
+         * @param {Array} arrayToCompare Array to compare.
+         * @returns {boolean}
+         */
+        self.compare = function (arrayToCompare) {
+            var result = true;
+            self.each(function (it, ind) {
+                if (it === arrayToCompare[ind]) {
+                    return false
+                }
+                else{
+                    result=false;
+                    return 'break';
+                }
+            });
+            return result;
+        };
+
         return self;
     };
+
+    /**
+     *
+     * @type {{}}
+     */
+
+    var privatesRouter = {
+        init: function () {
+
+        },
+        on: function (route, config) {
+            if (privatesRouter.existRoute(route)) {
+                //TODO: make udate route
+            }
+            else {
+                //add to routes
+                var defaultConfig = {
+                    cb: undefined,
+                    container: undefined
+                };
+                if (typeof config === 'function')
+                    defaultConfig = config;
+                else
+                    boq.utils.extends(defaultConfig, config);
+
+                boq.Router.routes.push({
+                    route: route,
+                    config: defaultConfig
+                });
+            }
+            //todo: check if is actual
+        },
+        off: function (route) {
+
+        },
+        goTo: function (route, trigger) {
+
+        },
+        existRoute: function (route) {
+            //todo: fix when not change de route part, like: only change the parammeter name, example:
+            // "/cat/:id_cat" and "/cat/:id_4cat" this is not valid, cuz y don't have way to detect the correct address. fix it.
+            var routeParts = new boq.Array(route.split('/'));
+            routeParts = routeParts.without("");
+            var res = boq.Router.routes.each(function (it) {
+                var routePartsE = new boq.Array(it.route.split('/'));
+                routePartsE = routePartsE.without("");
+                return routeParts.compare(routePartsE);
+            });
+            return res.length == 1;
+        }
+    };
+    privatesRouter.init();
+
+    /**
+     * Router
+     * @type {{}}
+     */
+    boq.Router = {
+        /**
+         * created routes.
+         */
+        routes: new boq.Array(),
+        /**
+         * create a new route
+         * @param {string} route the new route
+         * @param {object|function} config config object or function callback.
+         */
+        on: function (route, config) {
+            return privatesRouter.on.call(this, route, config);
+        },
+        off: function (route) {
+            return privatesRouter.off.call(this, route)
+        },
+        /**
+         *
+         * @param route route destination
+         * @param {boolean} [trigger=true] is the event triggered?
+         * @returns {boolean} if it has been redirected
+         */
+        goTo: function (route, trigger) {
+            return privatesRouter.goTo.call(this, route, trigger);
+        }
+    };
+
 
     window.Boq = window.boq = boq;
     if (typeof window.b === 'undefined')
