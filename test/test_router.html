@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Boq.js tests</title>
+    <script src="../src/boq.js" type="text/javascript"></script>
+</head>
+<body>
+<p>Open console</p>
+<a href="#">Main</a><br/>
+<a href="#/categories">Categories</a><br/>
+<a href="#/category/4">Category 4</a><br/>
+<a href="#/category/5">Category 5</a><br/>
+
+<p>more complex route.</p>
+<a href="#/user/santi8ago8/message/342/">#/user/santi8ago8/message/342/ (any route)</a><br/>
+<a href="#/user/santi8ago8/message/342/comments">#/user/santi8ago8/message/342/comments </a><br/>
+<a href="#/user/santi8ago8/message/342/comments/123">#/user/santi8ago8/message/342/comments/123</a><br/>
+
+<div id="test">test</div>
+<a onclick="b.Router.back()">Back();</a>
+<a onclick="b.Router.forward()">Forward();</a>
+<a href="#" onclick="off();return false;"> Off routes</a>
+<script type="text/javascript">
+    Boq.utils.log(Boq);
+
+    Boq.utils.debug("Testing Boq.Router");
+    var count = 1;
+    function setR(srt) {
+        document.querySelector('#test').innerHTML = srt.originalRoute + "<br />" + srt.newRoute;
+    }
+    b.Router.on('/', {
+        cb: function (e) {
+            b.u.log('main', e.container, e);
+            setR(e);
+            e.container.item(0).innerHTML = "main apretado: " + count++ + " veces";
+        },
+        container: '#test'
+    });
+    b.Router.on('/categories', function (e) {
+        b.u.log('/categories', e);
+        setR(e);
+    });
+    b.Router.on('/category/:id_cat', function (e) {
+        b.u.log('/category', e.params, e);
+        setR(e);
+    });
+    b.Router.on('/user/:id/message/:id_message/comments', function (e) {
+        b.u.log(e.params, e);
+        setR(e);
+    });
+    b.Router.on('/user/:id/message/:id_message/comments/:id_comment', {
+        cb: function (e) {
+            b.u.log(e.params, e);
+            setR(e);
+        },
+        exit: function () {
+           // return false;
+        }
+    });
+
+    function off() {
+        while (boq.Router.routes.length > 0) {
+            boq.Router.off(boq.Router.routes[0].route);
+        }
+    }
+
+</script>
+</body>
+</html>

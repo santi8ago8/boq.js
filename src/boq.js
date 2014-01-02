@@ -49,7 +49,7 @@
                 //check if property is direct from the object
                 if (sourceObject.hasOwnProperty && sourceObject.hasOwnProperty(i)) {
                     if (!replace) {
-                        if (typeof targetObject[i] == 'undefined') {
+                        if (typeof targetObject[i] === 'undefined') {
                             targetObject[i] = sourceObject[i];
                         }
                     }
@@ -67,9 +67,9 @@
          * @returns {number} a random float number
          */
         random: function (min, max) {
-            if (typeof min == 'undefined')
+            if (typeof min === 'undefined')
                 min = 0;
-            if (typeof max == 'undefined')
+            if (typeof max === 'undefined')
                 max = 1;
             return (Math.random() * (max - min) + min)
         },
@@ -94,7 +94,7 @@
     };
 
     /**
-     * create a boq array
+     * Create a boq array
      * @param {Array} [arr=[]] origin array
      * @constructor
      */
@@ -134,6 +134,7 @@
                 if (res || typeof res === 'undefined') {
                     result.push(self[i]);
                 }
+                //if the response is 'break' the each is cancel.
                 if (res === 'break') {
                     break;
                 }
@@ -171,9 +172,9 @@
         }
 
         /**
-         *
+         * remove element from array
          * @param {object} element element to remove from array
-         * @param {function} [compareFunction]
+         * @param {function} [compareFunction] compare function, default function use the === to compare elements.
          * @returns {boq.Array} resultant array
          */
         self.without = function (element, compareFunction) {
@@ -184,7 +185,7 @@
             return self.each(compareFunction);
         };
         /**
-         * compare with another array
+         * compare with another array, using the === to compare elements.
          * @param {Array} arrayToCompare Array to compare.
          * @returns {boolean}
          */
@@ -205,19 +206,71 @@
         return self;
     };
 
-    /**
-     *
-     * @type {{}}
-     */
-
+    //private functions (Router)
     var privatesRouter = {
         init: function () {
-
+            privatesRouter.currentHash = window.location.hash;
+            window.addEventListener('hashchange', privatesRouter.eventChange);
+        },
+        currentRoute: undefined,
+        currentHash: undefined,
+        eventChange: function () {
+            var e = event;
+            //result from exit function.
+            var resultExit = true;
+            if (e) {
+                if (e.preventDefault) e.preventDefault();
+                if (e.stopPropagation) e.stopPropagation();
+            }
+            var rObj = privatesRouter.getRouteObjectByCreatedRoute(window.location.hash);
+            if (privatesRouter.currentRoute) {
+                var current = privatesRouter.currentRoute;
+                if (typeof current.config.exit === 'function') {
+                    //only stop event if the result is === false.
+                    if (current.config.exit() === false) {
+                        //stop
+                        resultExit = false;
+                        //remove to not trigger when the hash change
+                        window.removeEventListener('hashchange', privatesRouter.eventChange);
+                        window.location.hash = privatesRouter.currentHash;
+                        //add again the event
+                        window.addEventListener('hashchange', privatesRouter.eventChange);
+                    }
+                }
+            }
+            if (resultExit === true && rObj) {
+                privatesRouter.currentRoute = rObj;
+                var container;
+                //convert querySelector in element.
+                if (typeof rObj.config.container === 'string')
+                    container = document.querySelectorAll(rObj.config.container);
+                //if exist jQuery, the element is converted to jQuery element.
+                if (typeof jQuery !== 'undefined')
+                    container = jQuery(container);
+                var params = {};
+                var originalRoute = new boq.Array(rObj.route.split('/')).without('');
+                var route = new boq.Array(window.location.hash.split('/')).without('').without('#');
+                //generate an object with params, (urls starting with ':')
+                originalRoute.each(function (it, ind) {
+                    if (it.charAt(0) === ':') {
+                        params[it.substr(1)] = route[ind];
+                    }
+                });
+                //call the callback function.
+                rObj.config.cb({
+                    container: container,
+                    newRoute: window.location.hash.substr(1),
+                    originalRoute: rObj.route,
+                    params: params
+                });
+                privatesRouter.currentHash = window.location.hash;
+            }
         },
         on: function (route, config) {
             //add to routes
             var defaultConfig = {
                 cb: undefined,
+                exit: undefined,
                 container: undefined
             };
             if (typeof config === 'function')
@@ -225,6 +278,7 @@
             else
                 boq.utils.extends(defaultConfig, config);
             if (privatesRouter.existRoute(route)) {
+                //update route
                 var routeParts = new boq.Array(route.split('/'));
                 routeParts = routeParts.without("");
                 routeParts = routeParts.each(function (it) {
@@ -243,6 +297,7 @@
                 });
             }
             else {
+                //add new route
                 boq.Router.routes.push({
                     route: route,
                     config: defaultConfig
@@ -252,24 +307,18 @@
             //check if is the current route and trigger event.
             var actualRoute = privatesRouter.getRouteObjectByCreatedRoute(window.location.hash);
             if (actualRoute && actualRoute.route == route) {
-                //TODO: trigger
-                debugger;
+                privatesRouter.eventChange();
             }
-
+            return boq.Router;
         },
         off: function (route) {
             var routeParts = new boq.Array(route.split('/'));
             routeParts = routeParts.without("");
-            routeParts = routeParts.each(function (it) {
-                return !(it.charAt(0) === ':');
-            });
+
             var routeToDelete;
             boq.Router.routes.each(function (it) {
                 var routeParts2 = new boq.Array(it.route.split('/'));
                 routeParts2 = routeParts2.without("");
-                routeParts2 = routeParts2.each(function (it) {
-                    return !(it.charAt(0) === ':');
-                });
                 if (routeParts.compare(routeParts2)) {
                     routeToDelete = it;
                 }
@@ -277,40 +326,36 @@
             if (routeToDelete) {
                 boq.Router.routes = boq.Router.routes.without(routeToDelete);
             }
+            return boq.Router;
         },
-        goTo: function (route, trigger) {
-
+        goTo: function (route) {
+            window.location.hash = route;
+            return boq.Router;
         },
         existRoute: function (route) {
             var routeParts = new boq.Array(route.split('/'));
             routeParts = routeParts.without("");
-            routeParts = routeParts.each(function (it) {
-                return !(it.charAt(0) === ':');
-            });
             var res = boq.Router.routes.each(function (it) {
                 var routePartsE = new boq.Array(it.route.split('/'));
                 routePartsE = routePartsE.without("");
-                routePartsE = routePartsE.each(function (it) {
-                    return !(it.charAt(0) === ':');
-                });
                 return routeParts.compare(routePartsE);
             });
             return res.length == 1;
         },
-        getRouteObjectByCreatedRoute: function (route) {
+        getRouteObjectByCreatedRoute: function (routeStr) {
             var response;
 
-            route = new boq.Array(route.split('/'));
+            var route = new boq.Array(routeStr.split('/'));
             route = route.without('').without("#");
 
             boq.Router.routes.each(function (it) {
                 var routeObj = new boq.Array(it.route.split('/')).without('');
                 var count = 0;
                 route.each(function (str, ind) {
-                    if (str == routeObj[ind] && routeObj[ind].charAt(0) !== ':') {
+                    if (routeObj[ind] && str == routeObj[ind] && routeObj[ind].charAt(0) !== ':') {
                         count++;
                     }
-                    if (routeObj[ind].charAt(0) === ':') {
+                    if (routeObj[ind] && routeObj[ind].charAt(0) === ':') {
                         count++;
                     }
                     return false;
@@ -323,11 +368,12 @@
             return response;
         }
     };
+    //init the Router
     privatesRouter.init();
 
     /**
      * Router
-     * @type {{}}
+     * @type {{routes: boq.Array, on: Function, off: Function, goTo: Function, back: Function, forward: Function}}
      */
     boq.Router = {
         /**
@@ -338,21 +384,42 @@
          * create a new route
          * @param {string} route the new route
          * @param {object|function} config config object or function callback.
+         * @returns {object} Boq.Router
          */
         on: function (route, config) {
             return privatesRouter.on.call(this, route, config);
         },
+        /**
+         * remove a route
+         * @param {string} route route to remove.
+         * @returns {object} Boq.Router
+         */
         off: function (route) {
             return privatesRouter.off.call(this, route)
         },
         /**
          *
          * @param route route destination
-         * @param {boolean} [trigger=true] is the event triggered?
-         * @returns {boolean} if it has been redirected
+         * @returns {object} Boq.Router
          */
-        goTo: function (route, trigger) {
-            return privatesRouter.goTo.call(this, route, trigger);
+        goTo: function (route) {
+            return privatesRouter.goTo.call(this, route);
+        },
+        /**
+         * Back into the history
+         * @returns {object} Boq.Router
+         */
+        back: function () {
+            window.history.back();
+            return boq.Router;
+        },
+        /**
+         * forward into the history
+         * @returns {object} Boq.Router
+         */
+        forward: function () {
+            window.history.forward();
+            return boq.Router;
         }
     };
 
