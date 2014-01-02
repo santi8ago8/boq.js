@@ -11,7 +11,7 @@
 
     /**
      * Util functions
-     * @type {{}}
+     * @type {{debug: Function, log: Function, extends: Function, random: Function, randomInt: Function, qs: Function}}
      */
     boq.utils = boq.u = {
         /**
