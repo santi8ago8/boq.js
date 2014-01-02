@@ -26,7 +26,7 @@
     Boq.utils.debug("Testing Boq.Router");
     var count = 1;
     function setR(srt) {
-        document.querySelector('#test').innerHTML = srt.originalRoute + "<br />" + srt.newRoute;
+        b.u.qs('#test')[0].innerHTML = srt.originalRoute + "<br />" + srt.newRoute;
     }
     b.Router.on('/', {
         cb: function (e) {
@@ -54,9 +54,11 @@
             setR(e);
         },
         exit: function () {
-           // return false;
+            // return false;
         }
     });
+
+    console.table(b.Router.routes);
 
     function off() {
         while (boq.Router.routes.length > 0) {

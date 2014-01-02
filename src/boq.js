@@ -222,7 +222,8 @@
                 if (e.preventDefault) e.preventDefault();
                 if (e.stopPropagation) e.stopPropagation();
             }
-            var rObj = privatesRouter.getRouteObjectByCreatedRoute(window.location.hash);
+            var hash = window.location.hash.substr(1);
+            var rObj = privatesRouter.getRouteObjectByCreatedRoute(hash);
             if (privatesRouter.currentRoute) {
                 var current = privatesRouter.currentRoute;
                 if (typeof current.config.exit === 'function') {
@@ -249,7 +250,7 @@
                     container = jQuery(container);
                 var params = {};
                 var originalRoute = new boq.Array(rObj.route.split('/')).without('');
-                var route = new boq.Array(window.location.hash.split('/')).without('').without('#');
+                var route = new boq.Array(hash.split('/')).without('').without('#');
                 //generate an object with params, (urls starting with ':')
                 originalRoute.each(function (it, ind) {
                     if (it.charAt(0) === ':') {
@@ -259,7 +260,7 @@
                 //call the callback function.
                 rObj.config.cb({
                     container: container,
-                    newRoute: window.location.hash.substr(1),
+                    newRoute: hash,
                     originalRoute: rObj.route,
                     params: params
                 });
