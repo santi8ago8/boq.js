@@ -20,7 +20,7 @@
          */
         debug: function (args) {
             //control for internet explorer
-            if (typeof console !== 'undefined') {
+            if (typeof console !== 'undefined' && console.debug) {
                 console.debug.apply(console, arguments);
             }
         },
@@ -32,6 +32,16 @@
             //control for internet explorer
             if (typeof console !== 'undefined') {
                 console.log.apply(console, arguments);
+            }
+        },
+        /**
+         * Table object in console, fix problems with internet explorer
+         * @param {object} args
+         */
+        table: function (args) {
+            //control for internet explorer
+            if (typeof console !== 'undefined' && console.table) {
+                console.table.apply(console, arguments);
             }
         },
         /**
