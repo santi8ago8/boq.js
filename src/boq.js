@@ -194,8 +194,8 @@
                 if (it === arrayToCompare[ind]) {
                     return false
                 }
-                else{
-                    result=false;
+                else {
+                    result = false;
                     return 'break';
                 }
             });
@@ -215,44 +215,112 @@
 
         },
         on: function (route, config) {
+            //add to routes
+            var defaultConfig = {
+                cb: undefined,
+                container: undefined
+            };
+            if (typeof config === 'function')
+                defaultConfig.cb = config;
+            else
+                boq.utils.extends(defaultConfig, config);
             if (privatesRouter.existRoute(route)) {
-                //TODO: make udate route
+                var routeParts = new boq.Array(route.split('/'));
+                routeParts = routeParts.without("");
+                routeParts = routeParts.each(function (it) {
+                    return !(it.charAt(0) === ':');
+                });
+                boq.Router.routes.each(function (it) {
+                    var routeParts2 = new boq.Array(it.route.split('/'));
+                    routeParts2 = routeParts2.without("");
+                    routeParts2 = routeParts2.each(function (it) {
+                        return !(it.charAt(0) === ':');
+                    });
+                    if (routeParts.compare(routeParts2)) {
+                        it.route = route;
+                        it.config = defaultConfig;
+                    }
+                });
             }
             else {
-                //add to routes
-                var defaultConfig = {
-                    cb: undefined,
-                    container: undefined
-                };
-                if (typeof config === 'function')
-                    defaultConfig = config;
-                else
-                    boq.utils.extends(defaultConfig, config);
-
                 boq.Router.routes.push({
                     route: route,
                     config: defaultConfig
                 });
             }
-            //todo: check if is actual
+
+            //check if is the current route and trigger event.
+            var actualRoute = privatesRouter.getRouteObjectByCreatedRoute(window.location.hash);
+            if (actualRoute && actualRoute.route == route) {
+                //TODO: trigger
+                debugger;
+            }
+
         },
         off: function (route) {
-
+            var routeParts = new boq.Array(route.split('/'));
+            routeParts = routeParts.without("");
+            routeParts = routeParts.each(function (it) {
+                return !(it.charAt(0) === ':');
+            });
+            var routeToDelete;
+            boq.Router.routes.each(function (it) {
+                var routeParts2 = new boq.Array(it.route.split('/'));
+                routeParts2 = routeParts2.without("");
+                routeParts2 = routeParts2.each(function (it) {
+                    return !(it.charAt(0) === ':');
+                });
+                if (routeParts.compare(routeParts2)) {
+                    routeToDelete = it;
+                }
+            });
+            if (routeToDelete) {
+                boq.Router.routes = boq.Router.routes.without(routeToDelete);
+            }
         },
         goTo: function (route, trigger) {
 
         },
         existRoute: function (route) {
-            //todo: fix when not change de route part, like: only change the parammeter name, example:
-            // "/cat/:id_cat" and "/cat/:id_4cat" this is not valid, cuz y don't have way to detect the correct address. fix it.
             var routeParts = new boq.Array(route.split('/'));
             routeParts = routeParts.without("");
+            routeParts = routeParts.each(function (it) {
+                return !(it.charAt(0) === ':');
+            });
             var res = boq.Router.routes.each(function (it) {
                 var routePartsE = new boq.Array(it.route.split('/'));
                 routePartsE = routePartsE.without("");
+                routePartsE = routePartsE.each(function (it) {
+                    return !(it.charAt(0) === ':');
+                });
                 return routeParts.compare(routePartsE);
             });
             return res.length == 1;
+        },
+        getRouteObjectByCreatedRoute: function (route) {
+            var response;
+
+            route = new boq.Array(route.split('/'));
+            route = route.without('').without("#");
+
+            boq.Router.routes.each(function (it) {
+                var routeObj = new boq.Array(it.route.split('/')).without('');
+                var count = 0;
+                route.each(function (str, ind) {
+                    if (str == routeObj[ind] && routeObj[ind].charAt(0) !== ':') {
+                        count++;
+                    }
+                    if (routeObj[ind].charAt(0) === ':') {
+                        count++;
+                    }
+                    return false;
+                });
+                if (count == route.length && count == routeObj.length) {
+                    response = it;
+                }
+            });
+
+            return response;
         }
     };
     privatesRouter.init();
