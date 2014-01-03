@@ -212,6 +212,20 @@
             });
             return result;
         };
+        /**
+         * return the first element of the array
+         * @type {Function}
+         */
+        self.first = self.f = function () {
+            return self[0];
+        };
+        /**
+         * return the last element of the array
+         * @type {Function}
+         */
+        self.last = self.l = function () {
+            return self[self.length - 1];
+        };
 
         return self;
     };
@@ -254,7 +268,7 @@
                 var container;
                 //convert querySelector in element.
                 if (typeof rObj.config.container === 'string')
-                    container = document.querySelectorAll(rObj.config.container);
+                    container = boq.u.qs(rObj.config.container);
                 //if exist jQuery, the element is converted to jQuery element.
                 if (typeof jQuery !== 'undefined')
                     container = jQuery(container);
