@@ -227,6 +227,8 @@
             return self[self.length - 1];
         };
 
+
+
         return self;
     };
 
