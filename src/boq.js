@@ -354,7 +354,13 @@
             return boq.Router;
         },
         goTo: function (route) {
-            window.location.hash = route;
+            var hash = b.Array(window.location.hash.substr(1).split('/')).without('').without('#');
+            var r = b.Array(route.split('/')).without('').without('#');
+
+            if (hash.compare(r))
+                privatesRouter.eventChange();
+            else
+                window.location.hash = route;
             return boq.Router;
         },
         existRoute: function (route) {
