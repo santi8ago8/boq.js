@@ -93,6 +93,21 @@
             return parseInt(boq.utils.random(min, max));
         },
         /**
+         * get keys from object.
+         * @param {object} sourceObject
+         * @returns {boq.Array}
+         */
+        keys: function (sourceObject) {
+            var ret = new boq.Array();
+            for (var i in sourceObject) {
+                //check if property is direct from the object
+                if (sourceObject.hasOwnProperty && sourceObject.hasOwnProperty(i)) {
+                    ret.push(i);
+                }
+            }
+            return ret;
+        },
+        /**
          * get an boq.Array with document.querySelector
          * @param query query selector
          * @returns {boq.Array}
@@ -226,8 +241,29 @@
         self.last = self.l = function () {
             return self[self.length - 1];
         };
-
-
+        /**
+         * get a random element from array.
+         * @returns {object}
+         */
+        self.randomElem = function () {
+            return self[boq.utils.randomInt(0, self.length)];
+        };
+        /**
+         * get elements with even indexes
+         * @returns {*}
+         */
+        self.even = function () {
+            return self.each(function () {
+            }, 0, 2);
+        };
+        /**
+         * get elements with uneven indexes
+         * @returns {*}
+         */
+        self.uneven = function () {
+            return self.each(function () {
+            }, 1, 2)
+        };
 
         return self;
     };

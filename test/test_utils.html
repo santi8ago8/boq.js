@@ -9,27 +9,34 @@
 
 <script type="text/javascript">
     Boq.utils.debug(Boq);
-    (function () {
-        Boq.utils.debug("Testing utils.extends");
-        var target = {};
-        var source = {
-            main: 1, name: "look", funct: function () {
-            }};
-        Boq.utils.extends(target, source);
-        Boq.utils.log("Resultant object:", target);
-        var source2 = {
-            main: 2, name: "look2", funct: function () {
-                3;
-            }};
-        boq.utils.extends(target, source2, true);
-        Boq.utils.log("Second resultant:", target);
-        var source3 = {
-            main: 3, name: "look3", funct: function () {
-                3;
-            }};
-        boq.utils.extends(target, source3, false);
-        Boq.utils.log("Three resultant:", target);
-    }());
+
+    Boq.utils.debug("Testing utils.extends");
+    var target = {};
+    var source = {
+        main: 1, name: "look", funct: function () {
+        }};
+    Boq.utils.extends(target, source);
+    Boq.utils.log("Resultant object:", target);
+    var source2 = {
+        main: 2, name: "look2", funct: function () {
+            3;
+        }};
+    boq.utils.extends(target, source2, true);
+    Boq.utils.log("Second resultant:", target);
+    var source3 = {
+        main: 3, name: "look3", funct: function () {
+            3;
+        }};
+    boq.utils.extends(target, source3, false);
+    Boq.utils.log("Three resultant:", target);
+
+    //keys.
+    b.u.debug("keys from object");
+    b.u.log("Random object: ", b.u.keys({
+        name: "Santiago",
+        lastname: "Cordoba"
+    }));
+    b.u.log("Boq.Array keys: ", b.u.keys(new b.Array()));
 
 
 </script>

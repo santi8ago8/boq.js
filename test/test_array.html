@@ -18,16 +18,43 @@
 
     boq.utils.log(arr);
 
-
+    b.u.debug('each test');
     var eachresult = arr.each(function (item, index) {
-        Boq.utils.log(item, index);
+        Boq.utils.log("inside each: ", item, index);
         if (item === 1)
             return false;
     });
+    b.u.log('each result', eachresult);
 
-    console.log(eachresult);
+    b.u.debug('each break');
+    var eachresult2 = arr.each(function (item, index) {
+        Boq.utils.log("inside each: ", item, index);
+        if (item === 'lock')
+            return "break";
+    });
+    b.u.log('each result with break', eachresult);
 
-    console.log(eachresult.reverse());
+    b.u.log(eachresult2);
+
+    b.u.log("Reverse array", eachresult.reverse());
+
+    b.u.debug('first and last test: ', "test array: ", eachresult);
+    b.u.log('first: ', eachresult.first());
+    b.u.log('first: ', eachresult.f());
+
+    b.u.log('last: ', eachresult.last());
+    b.u.log('last: ', eachresult.l());
+
+    b.u.debug('random element');
+    b.u.log('random: ', eachresult.randomElem());
+    b.u.log('random: ', eachresult.randomElem());
+    b.u.log('random: ', eachresult.randomElem());
+
+    b.u.debug('even and uneven (indexes, not elements) test');
+    var ev = new b.Array(['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j']);
+    b.u.log('target array', ev);
+    b.u.log('even', ev.even());
+    b.u.log('uneven', ev.uneven());
 
 </script>
 </body>
