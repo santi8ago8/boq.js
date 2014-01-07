@@ -264,7 +264,15 @@
             return self.each(function () {
             }, 1, 2)
         };
-
+        self.groupBy = function (propertyName) {
+            var result = {};
+            self.each(function (it) {
+                if (typeof it[propertyName] !== 'undefined') {
+                    result[it[propertyName]] = it;
+                }
+            });
+            return result;
+        };
         return self;
     };
 
