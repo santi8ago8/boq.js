@@ -56,7 +56,40 @@
     b.u.log('even', ev.even());
     b.u.log('uneven', ev.uneven());
 
-    
+    b.u.debug('groupBy');
+    var gby = new b.Array();
+    gby.push({
+        name: "juan",
+        lastname: "perez",
+        city: "San Juan"
+    });
+    gby.push({
+        name: "Lucas",
+        lastname: "Gonz",
+        city: "San Luis"
+    });
+    gby.push({
+        name: "Ester",
+        lastname: "Martinez",
+        city: "San Diego"
+    });
+    gby.push({
+        name: "Pedro",
+        lastname: "perez",
+        city: "San Juan"
+    });
+    gby.push({
+        name: "Eliana",
+        lastname: "Suarez",
+        city: "San Juan"
+    });
+    gby.push({
+        name: "Valentina",
+        lastname: "perez"
+    });
+
+    b.u.log(gby.groupBy('lastname'));
+    b.u.log(gby.groupBy('city', 'any'));
 
 </script>
 </body>

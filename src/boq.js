@@ -276,12 +276,11 @@
                 restName = "default";
             }
             self.each(function (it) {
-                if (it[propertyName]) {
-                    result[it[propertyName]] = it;
-                }
-                else {
-                    result[restName] = it;
-                }
+                var pName = it[propertyName] ? it[propertyName] : restName;
+                if (!result[pName])
+                    result[pName] = new boq.Array();
+
+                result[pName].push(it);
             });
             return result;
         };
