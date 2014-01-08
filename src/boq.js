@@ -264,11 +264,23 @@
             return self.each(function () {
             }, 1, 2)
         };
-        self.groupBy = function (propertyName) {
+        /**
+         * group an elements from array, creating a object
+         * @param propertyName the property that read from object
+         * @param [restName='default'] name of the default property, use in elements with value: null, undefined, false, 0
+         * @returns {object}
+         */
+        self.groupBy = function (propertyName, restName) {
             var result = {};
+            if (typeof restName === 'undefined') {
+                restName = "default";
+            }
             self.each(function (it) {
-                if (typeof it[propertyName] !== 'undefined') {
+                if (it[propertyName]) {
                     result[it[propertyName]] = it;
+                }
+                else {
+                    result[restName] = it;
                 }
             });
             return result;
