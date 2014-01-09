@@ -284,6 +284,40 @@
             });
             return result;
         };
+        /**
+         * return the count of ocurrences of the element, using the three equals operator.
+         * @param {object} element element to find
+         * @param {number} [start=1] start index
+         * @returns {number}
+         */
+        self.ocurrences = function (element, start) {
+            if (typeof start === 'undefined')
+                start = 0;
+            var count = 0;
+            self.each(function (it, ind) {
+                //using the three equals operator.
+                if (it === element)
+                    count++;
+            }, start);
+            return count;
+        };
+        /**
+         * return an array with the indexes of the element in array
+         * @param {object} element element to find
+         * @param {number} [start=1] start index
+         * @returns {boq.Array}
+         */
+        self.indexes = function (element, start) {
+            if (typeof start === 'undefined')
+                start = 0;
+            var result = new boq.Array();
+            self.each(function (it, ind) {
+                //using the three equals operator.
+                if (it === element)
+                    result.push(ind);
+            }, start);
+            return result;
+        };
         return self;
     };
 
