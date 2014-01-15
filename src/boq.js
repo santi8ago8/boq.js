@@ -386,11 +386,11 @@
         on: function (route, config) {
             //add to routes
             var defaultConfig = {
+                name: undefined,
                 route: route,
-                cb: undefined,
-                exit: undefined,
                 container: undefined,
-                name: undefined
+                cb: undefined,
+                exit: undefined
             };
             if (typeof config === 'function')
                 defaultConfig.cb = config;
