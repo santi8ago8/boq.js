@@ -20,6 +20,7 @@
 <a onclick="b.Router.back()">Back();</a>
 <a onclick="b.Router.forward()">Forward();</a>
 <a href="#" onclick="off();return false;"> Off routes</a>
+<a href="#" onclick="b.Router.offByName('index');return false;"> offByName('index'); </a>
 <script type="text/javascript">
     Boq.utils.log(Boq);
 
@@ -34,7 +35,8 @@
             setR(e);
             e.container.item(0).innerHTML = "main apretado: " + count++ + " veces";
         },
-        container: '#test'
+        container: '#test',
+        name:'index'
     });
     b.Router.on('/categories', function (e) {
         b.u.log('/categories', e);

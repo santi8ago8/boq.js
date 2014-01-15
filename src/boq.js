@@ -341,9 +341,9 @@
             var rObj = privatesRouter.getRouteObjectByCreatedRoute(hash);
             if (privatesRouter.currentRoute) {
                 var current = privatesRouter.currentRoute;
-                if (typeof current.config.exit === 'function') {
+                if (typeof current.exit === 'function') {
                     //only stop event if the result is === false.
-                    if (current.config.exit() === false) {
+                    if (current.exit() === false) {
                         //stop
                         resultExit = false;
                         //remove to not trigger when the hash change
@@ -358,8 +358,8 @@
                 privatesRouter.currentRoute = rObj;
                 var container;
                 //convert querySelector in element.
-                if (typeof rObj.config.container === 'string')
-                    container = boq.u.qs(rObj.config.container);
+                if (typeof rObj.container === 'string')
+                    container = boq.u.qs(rObj.container);
                 //if exist jQuery, the element is converted to jQuery element.
                 if (typeof jQuery !== 'undefined')
                     container = jQuery(container);
@@ -373,7 +373,8 @@
                     }
                 });
                 //call the callback function.
-                rObj.config.cb({
+                rObj.cb({
+                    name: rObj.name,
                     container: container,
                     newRoute: hash,
                     originalRoute: rObj.route,
@@ -385,9 +386,11 @@
         on: function (route, config) {
             //add to routes
             var defaultConfig = {
+                route: route,
                 cb: undefined,
                 exit: undefined,
-                container: undefined
+                container: undefined,
+                name: undefined
             };
             if (typeof config === 'function')
                 defaultConfig.cb = config;
@@ -407,17 +410,13 @@
                         return !(it.charAt(0) === ':');
                     });
                     if (routeParts.compare(routeParts2)) {
-                        it.route = route;
-                        it.config = defaultConfig;
+                        boq.utils.extends(it, defaultConfig);
                     }
                 });
             }
             else {
                 //add new route
-                boq.Router.routes.push({
-                    route: route,
-                    config: defaultConfig
-                });
+                boq.Router.routes.push(defaultConfig);
             }
 
             //check if is the current route and trigger event.
@@ -438,6 +437,17 @@
                 if (routeParts.compare(routeParts2)) {
                     routeToDelete = it;
                 }
+            });
+            if (routeToDelete) {
+                boq.Router.routes = boq.Router.routes.without(routeToDelete);
+            }
+            return boq.Router;
+        },
+        offByName: function (routeName) {
+            var routeToDelete;
+            boq.Router.routes.each(function (it) {
+                if (it.name === routeName)
+                    routeToDelete = it;
             });
             if (routeToDelete) {
                 boq.Router.routes = boq.Router.routes.without(routeToDelete);
@@ -520,6 +530,14 @@
             return privatesRouter.off.call(this, route)
         },
         /**
+         * remove a route by name
+         * @param {string} routeName route name to remove.
+         * @returns {object} Boq.Router
+         */
+        offByName: function (routeName) {
+            return privatesRouter.offByName.call(this, routeName);
+        },
+        /**
          *
          * @param route route destination
          * @returns {object} Boq.Router
@@ -542,6 +560,13 @@
         forward: function () {
             window.history.forward();
             return boq.Router;
+        },
+        /**
+         * get the current route
+         * @returns {object}
+         */
+        current: function () {
+            return privatesRouter.currentRoute;
         }
     };
 
