@@ -115,6 +115,26 @@
         qs: function (query) {
             var res = document.querySelectorAll(query);
             return new boq.Array(res);
+        },
+
+        /**
+         * format string
+         * @param {string} mask mask string example "hello %0% your name is %1%" don't use spaces between % and the numbers
+         * @returns {string}
+         */
+        format: function (mask) {
+            var patern = /%\d+%/;
+            var args = new boq.Array(arguments);
+            args.each(function (it, ind) {
+                //replace the ocurrences
+                var reg = new RegExp('%' + (ind - 1).toString() + '%');
+                reg.multiline = true;
+                while (reg.test(mask))
+                    mask = mask.replace(reg, it);
+            }, 1);
+
+            return mask;
+
         }
     };
 
