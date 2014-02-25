@@ -10,6 +10,38 @@
     boq._version = "0.0.1";
 
     /**
+     * private functions (utils)
+     * @type {{}}
+     */
+    var privateUtils = {
+        qsThis: function (query) {
+            return boq.utils.qs.call(this, query, this);
+        },
+        qs: function (self, query) {
+            if (self.length == 0) {
+                var r = boq.Array(document.querySelectorAll(query));
+                r.each(function (el) {
+                    self.push(el);
+                });
+                return self;
+            } else {
+                return boq.utils.qs()
+            }
+        },
+        qsContext: function (query, context, res) {
+            context.each(function (it) {
+                var resIt = boq.Array(it.querySelectorAll(query));
+                resIt.each(function (itR) {
+                    if (res.indexOf(itR) == -1) {
+                        res.push(itR);
+                    }
+                });
+
+            });
+            return res;
+        }
+    };
+    /**
      * Util functions
      * @type {{debug: Function, log: Function, extends: Function, random: Function, randomInt: Function, qs: Function}}
      */
@@ -112,9 +144,17 @@
          * @param query query selector
          * @returns {boq.Array}
          */
-        qs: function (query) {
-            var res = document.querySelectorAll(query);
-            return new boq.Array(res);
+        qs: function (query, context) {
+            var res = boq.Array();
+            boq.utils.extends(res, boq.utils.qs.adds, false);
+            boq.utils.extends(res.adds = {}, boq.utils.qs.adds);
+            if (typeof context !== 'undefined') {
+
+                return privateUtils.qsContext.call(res, query, context, res);
+
+            }
+            else
+                return privateUtils.qs.call(res, res, query);
         },
 
         /**
@@ -136,6 +176,11 @@
             return mask;
 
         }
+    };
+
+    //create the adds for the query selector
+    boq.utils.qs.adds = {
+        qs: privateUtils.qsThis
     };
 
     /**
@@ -174,7 +219,7 @@
                 ; i += interval) {
                 var res = true;
                 if (fn) {
-                    res = fn(self[i], i);
+                    res = fn.call(self, self[i], i);
                 }
                 if (res || typeof res === 'undefined') {
                     result.push(self[i]);

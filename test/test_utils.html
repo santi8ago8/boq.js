@@ -6,7 +6,40 @@
 </head>
 <body>
 <p>Open console</p>
-
+<table class="table1" border="1">
+    <tr class="first">
+        <td class="head">1</td>
+        <td>2</td>
+        <td>3</td>
+    </tr>
+    <tr class="midle">
+        <td>4</td>
+        <td>5</td>
+        <td>6</td>
+    </tr>
+    <tr class="midle">
+        <td>7</td>
+        <td>8</td>
+        <td>9</td>
+    </tr>
+</table>
+<table class="table2" border="1">
+    <tr class="first">
+        <td class="head">1</td>
+        <td>2</td>
+        <td>3</td>
+    </tr>
+    <tr class="midle">
+        <td>4</td>
+        <td>5</td>
+        <td>6</td>
+    </tr>
+    <tr class="midle">
+        <td>7</td>
+        <td>8</td>
+        <td>9</td>
+    </tr>
+</table>
 <script type="text/javascript">
     Boq.utils.debug(Boq);
 
@@ -41,6 +74,43 @@
     //format
     b.u.debug("format string");
     b.u.log(b.u.format('Hello %0% my name is "%1%" :)', 'world', 'luca'));
+
+    //query selector example.
+    b.u.debug("query selector example");
+    var resQS = b.u.qs('.table1');
+    b.u.log(resQS);
+    b.u.log(resQS.qs('td.head'));
+
+    //add method to result,
+    //example, add method that increment number in text in the node.
+    boq.utils.qs.adds.plusText = function (inc) {
+        this.each(function (it) {
+            var n = parseInt(it.innerText);
+            if (!isNaN(n)) {
+                n += inc;
+                it.innerText = n;
+            }
+        });
+    };
+
+    //using function.
+    resQS.qs('td.head').plusText(3);
+    resQS.qs('td.head').plusText(-5);
+    resQS.qs('td').plusText(1);
+
+    //if the property name has already been created earlier will not be replaced.
+    //you can access from: qs.adds.function
+    //for example each.
+    boq.utils.qs.adds.each = function () {
+        return 'fake each!';
+    };
+
+    b.u.debug('you can see, that each is the clasic each:');
+    b.u.log(resQS.qs('td.head').each());
+
+    b.u.debug('and this is the new each function:');
+    b.u.log(resQS.qs('td.head').adds.each());
+
 
 </script>
 </body>
