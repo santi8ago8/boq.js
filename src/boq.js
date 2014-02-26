@@ -395,7 +395,7 @@
         currentRoute: undefined,
         currentHash: undefined,
         eventChange: function () {
-            var e = event;
+            var e = typeof event !== 'undefined' ? event : undefined;
             //result from exit function.
             var resultExit = true;
             if (e) {
