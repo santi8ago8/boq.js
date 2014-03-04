@@ -1,7 +1,6 @@
 /**
  * User: santi8ago8
  * GitHub: https://github.com/santi8ago8/boq.js
- * Version 0.0.1
  */
 
 
@@ -180,8 +179,13 @@
 
     //create the adds for the query selector
     boq.utils.qs.adds = {
-        qs: privateUtils.qsThis
+        qs: privateUtils.qsThis,
+        q: privateUtils.qsThis
     };
+
+    // qs in global scope with name q
+    if (typeof window.q === 'undefined')
+        window.q = boq.utils.qs;
 
     /**
      * Create a boq array
