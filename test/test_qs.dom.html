@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Boq.js tests</title>
+    <script src="../src/boq.js" type="text/javascript"></script>
+    <script src="../src/boq.dom.js" type="text/javascript"></script>
+</head>
+<body>
+<p>Open console</p>
+<table class="table1" border="1">
+    <tr class="first">
+        <td class="head">1</td>
+        <td>2</td>
+        <td>3</td>
+    </tr>
+    <tr class="midle">
+        <td>4</td>
+        <td>5</td>
+        <td>6</td>
+    </tr>
+    <tr class="midle">
+        <td>7</td>
+        <td>8</td>
+        <td>9</td>
+    </tr>
+</table>
+<table class="table2" border="1">
+    <tr class="first">
+        <td class="head">1</td>
+        <td>2</td>
+        <td>3</td>
+    </tr>
+    <tr class="midle">
+        <td>4</td>
+        <td>5</td>
+        <td>6</td>
+    </tr>
+    <tr class="midle">
+        <td>7</td>
+        <td>8</td>
+        <td>9</td>
+    </tr>
+</table>
+<script type="text/javascript">
+
+    //query selector example.
+    b.u.debug("query selector example");
+    var resQS = b.u.qs('.table1');
+    b.u.log(resQS);
+    b.u.log(resQS.qs('td.head'));
+
+
+
+</script>
+</body>
+</html>

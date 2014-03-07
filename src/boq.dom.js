@@ -20,6 +20,28 @@ Boq.utils.qs.adds.html = function (html) {
 };
 
 /**
+ * set or get the text of selected nodes
+ * @param {string} [text] text to set
+ * @returns {string|*}
+ */
+Boq.utils.qs.adds.text = function (text) {
+    if (typeof text === 'undefined') {
+        if (typeof this[0] !== 'undefined')
+            if (this[0].innerText)
+                return this[0].innerText;
+            else
+                return this[0].textContent;
+    }
+    this.each(function (it) {
+        if (it.innerText)
+            it.innerText = text;
+        else
+            it.textContent = text;
+    });
+    return this;
+};
+
+/**
  * set or get the html of selected nodes
  * @param {string} name name of the attribute
  * @param {string} [value] value to set in the attribute
@@ -80,4 +102,34 @@ Boq.utils.qs.adds.remove = function () {
             it.parentNode.removeChild(it);
         }
     });
+};
+
+/**
+ * attach event of the selected nodes
+ * @param {string} type name of the event
+ * @param {function} cb cb that will trigger when the event is triggered
+ * @returns {null|*|boq.Array}
+ */
+Boq.utils.qs.adds.on = function (type, cb) {
+    return this.each(function (it) {
+        if (it.addEventListener)
+            it.addEventListener(type, cb, false);
+        else
+            it.attachEvent('on' + type, cb);
+    })
+};
+
+/**
+ * detach event of the selected nodes
+ * @param {string} type name of the event
+ * @param {function} cb cb that will trigger when the event is triggered
+ * @returns {null|*|boq.Array}
+ */
+Boq.utils.qs.adds.off = function (type, cb) {
+    return this.each(function (it) {
+        if (it.removeEventListener)
+            it.removeEventListener(type, cb);
+        else
+            it.detachEvent('on' + type, cb);
+    })
 };
