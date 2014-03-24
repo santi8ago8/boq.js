@@ -387,6 +387,38 @@
             }, start);
             return result;
         };
+
+        /**
+         * remove an item from array, by index
+         * @param {number} index the index to remove from array
+         * @returns {boq.Array}
+         */
+        self.removeAt = function (index) {
+            var shift = false;
+            self.each(function (it, ind) {
+
+                if (ind == index) {
+                    shift = true;
+                }
+                if (shift && typeof self[ind + 1] !== 'undefined') {
+                    self[ind] = self[ind + 1];
+
+                }
+                return false;
+            });
+            if (shift)
+                self.pop();
+            return self;
+        };
+        /**
+         * remove an item from array, finding the item in the array
+         * @param {*} elem the element to remove from array
+         * @returns {boq.Array}
+         */
+        self.remove = function (elem) {
+            return self.removeAt(self.indexOf(elem));
+        };
+
         return self;
     };
 
