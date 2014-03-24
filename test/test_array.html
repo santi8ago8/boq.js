@@ -92,6 +92,13 @@
     b.u.log(gby.groupBy('lastname'));
     b.u.log(gby.groupBy('city', 'any'));
 
+    b.u.debug('removeAt and remove');
+    arr.push("me");
+    b.u.log('target array', arr);
+    b.u.log('remove', arr.remove("me"));
+    b.u.log('removeAt', arr.removeAt(0));
+    b.u.log('affect the original array', arr);
+
 </script>
 </body>
 </html>

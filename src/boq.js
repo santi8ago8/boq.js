@@ -390,6 +390,7 @@
 
         /**
          * remove an item from array, by index
+         * affect the original array
          * @param {number} index the index to remove from array
          * @returns {boq.Array}
          */
@@ -412,6 +413,7 @@
         };
         /**
          * remove an item from array, finding the item in the array
+         * affect the original array
          * @param {*} elem the element to remove from array
          * @returns {boq.Array}
          */
