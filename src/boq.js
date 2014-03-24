@@ -38,11 +38,69 @@
 
             });
             return res;
+        },
+        engineTimer: function (time, int) {
+            var self = {};
+            self.type = int ? setInterval : setTimeout;
+            self.typeClear = int ? clearInterval : clearTimeout;
+
+            self.time = typeof time !== 'undefined' ? time : 0;
+            self.callbacks = boq.Array();
+            self.id = undefined;
+            self.timesTriggered = 0;
+            self.cleared = false;
+            self.run = function () {
+                self.timesTriggered++;
+                self.callbacks.each(function (it) {
+                    it(self);
+                });
+                return self;
+            };
+            self.then = function (fn) {
+                self.callbacks.push(fn);
+                return self;
+            };
+            self.setTime = function (time) {
+                self.time = time;
+                self.restart();
+                return self;
+            };
+            self.restart = function () {
+                self.clear();
+                self.cleared = false;
+                self.id = self.type.call(window, function () {
+                    self.run();
+                }, self.time);
+                return self;
+            };
+            self.clear = function () {
+                if (typeof self.id !== 'undefined') {
+                    self.typeClear.call(window, self.id);
+                    self.timesTriggered = 0;
+                    self.cleared = true;
+                }
+                return self;
+            };
+            self.off = function (factor) {
+                if (typeof factor === 'function') {
+                    self.callbacks.remove(factor);
+                }
+                else {
+                    self.callbacks.removeAt(factor);
+                }
+                return self;
+            };
+            self.offAll = function () {
+                self.callbacks = boq.Array();
+                return self;
+            };
+
+            return self.restart();
         }
     };
     /**
      * Util functions
-     * @type {{debug: Function, log: Function, extends: Function, random: Function, randomInt: Function, qs: Function}}
+     * @type {{debug: debug, log: log, table: table, extends: extends, random: random, randomInt: randomInt, keys: keys, qs: qs, format: format, timeout: timeout, inteval: inteval}}
      */
     boq.utils = boq.u = {
         /**
@@ -155,7 +213,6 @@
             else
                 return privateUtils.qs.call(res, res, query);
         },
-
         /**
          * format string
          * @param {string} mask mask string example "hello %0% your name is %1%" don't use spaces between % and the numbers
@@ -174,6 +231,14 @@
 
             return mask;
 
+        },
+
+        timeout: function (time) {
+            return privateUtils.engineTimer(time, false);
+        },
+
+        inteval: function (time) {
+            return privateUtils.engineTimer(time, true);
         }
     };
 
@@ -182,6 +247,9 @@
         qs: privateUtils.qsThis,
         q: privateUtils.qsThis
     };
+
+    //add the util functions to main var
+    boq.utils.extends(boq, boq.utils, false);
 
     // qs in global scope with name q
     if (typeof window.q === 'undefined')
