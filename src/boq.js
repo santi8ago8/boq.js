@@ -49,6 +49,10 @@
             self.id = undefined;
             self.timesTriggered = 0;
             self.cleared = false;
+            /**
+             * run callbacks functions
+             * @returns {{}}
+             */
             self.run = function () {
                 self.timesTriggered++;
                 self.callbacks.each(function (it) {
@@ -56,15 +60,29 @@
                 });
                 return self;
             };
+            /**
+             * Add function to callbacks
+             * @param {function} fn function to add
+             * @returns {{}}
+             */
             self.then = function (fn) {
                 self.callbacks.push(fn);
                 return self;
             };
+            /**
+             * change the timeout/interval time, and restart
+             * @param time
+             * @returns {{}}
+             */
             self.setTime = function (time) {
                 self.time = time;
                 self.restart();
                 return self;
             };
+            /**
+             * restart the timeout/interval
+             * @returns {{}}
+             */
             self.restart = function () {
                 self.clear();
                 self.cleared = false;
@@ -73,6 +91,10 @@
                 }, self.time);
                 return self;
             };
+            /**
+             * clear the timeout/interval eq clearTimeout/clearInterval
+             * @returns {{}}
+             */
             self.clear = function () {
                 if (typeof self.id !== 'undefined') {
                     self.typeClear.call(window, self.id);
@@ -81,6 +103,11 @@
                 }
                 return self;
             };
+            /**
+             * remove function from callbacks
+             * @param {function|number} factor function or function index to remove.
+             * @returns {{}}
+             */
             self.off = function (factor) {
                 if (typeof factor === 'function') {
                     self.callbacks.remove(factor);
@@ -90,6 +117,10 @@
                 }
                 return self;
             };
+            /**
+             * remove all functions from callbacks
+             * @returns {{}}
+             */
             self.offAll = function () {
                 self.callbacks = boq.Array();
                 return self;
@@ -232,11 +263,19 @@
             return mask;
 
         },
-
+        /**
+         * Create a timeout object, use promises
+         * @param time
+         * @returns {privateUtils.engineTimer}
+         */
         timeout: function (time) {
             return privateUtils.engineTimer(time, false);
         },
-
+        /**
+         * Create a interval object, use promises
+         * @param time
+         * @returns {privateUtils.engineTimer}
+         */
         inteval: function (time) {
             return privateUtils.engineTimer(time, true);
         }
