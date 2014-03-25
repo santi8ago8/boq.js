@@ -43,11 +43,30 @@
             var self = {};
             self.type = int ? setInterval : setTimeout;
             self.typeClear = int ? clearInterval : clearTimeout;
-
+            /**
+             * the time to interval/timeout
+             * @type {number}
+             */
             self.time = typeof time !== 'undefined' ? time : 0;
+            /**
+             * boq.Array with callback functions
+             * @type {boq.Array}
+             */
             self.callbacks = boq.Array();
+            /**
+             * the id if timeout/interval
+             * @type {number}
+             */
             self.id = undefined;
+            /**
+             * sometimes fired callbacks
+             * @type {number}
+             */
             self.timesTriggered = 0;
+            /**
+             * true if is cleared, false if is not cleared
+             * @type {boolean}
+             */
             self.cleared = false;
             /**
              * run callbacks functions
