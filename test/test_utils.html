@@ -116,6 +116,30 @@
     b.u.debug('q abbreviation');
     b.u.log(q('.table1').q('tr').q('td'));
 
+    // interval/timeout utils
+    b.u.debug('interval/timeout utils');
+
+    var t = b.interval(1000);
+    t
+            .then(function () {
+                b.log('first function run');
+            })
+            .then(function (a) {
+                b.log('timesTriggered', a.timesTriggered, t.timesTriggered);
+                if (a.timesTriggered >= 3){
+                    a.setTime(3000);
+                    //change time
+                }
+                if (a.timesTriggered >= 2 && a.time == 3000){
+                    t.clear(); 
+                    //clear interval
+                }
+            })
+            .run() //force run callbacks
+            .then(function () {
+                b.log('second function run')
+            })
+
 
 </script>
 </body>

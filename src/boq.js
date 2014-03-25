@@ -295,7 +295,7 @@
          * @param time
          * @returns {privateUtils.engineTimer}
          */
-        inteval: function (time) {
+        interval: function (time) {
             return privateUtils.engineTimer(time, true);
         }
     };
