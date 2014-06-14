@@ -253,7 +253,7 @@
          */
         qs: function (query, context) {
             var res = boq.Array();
-            boq.utils.extends(res, boq.utils.qs.adds, false);
+            boq.utils.extends(res, boq.utils.qs.adds);
             boq.utils.extends(res.adds = {}, boq.utils.qs.adds);
             if (typeof context !== 'undefined') {
 
@@ -320,6 +320,7 @@
      */
     boq.Array = function (arr) {
         var self = typeof arr !== 'undefined' ? arr : [];
+
 
         /**
          * each in the array
@@ -546,7 +547,25 @@
         self.remove = function (elem) {
             return self.removeAt(self.indexOf(elem));
         };
-
+        /**
+         * add element to the array
+         * @param {*} elem an item to add
+         * @param [concat=false] if is true concat the array passed in the first param.
+         * @returns {Array=}
+         */
+        self.add = function (elem, concat) {
+            //concat array whit this
+            if (Object.prototype.toString.call(elem) === '[object Array]' && concat) {
+                new boq.Array(elem).each(function (i) {
+                    self.push(i);
+                });
+            }
+            //add the element to array
+            else {
+                self.push(elem);
+            }
+            return self;
+        };
         return self;
     };
 

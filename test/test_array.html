@@ -99,6 +99,16 @@
     b.u.log('removeAt', arr.removeAt(0));
     b.u.log('affect the original array', arr);
 
+    b.u.debug('add, element and array');
+    var arrAdd = new boq.Array();
+    //add simple object to array
+    arrAdd.add("Hi");
+    //add the array to array
+    arrAdd.add(b.Array([1,2,3]));
+    //concat the new array to array
+    arrAdd.add(b.Array([4,6,7]),true);
+    b.u.log(arrAdd);
+
 </script>
 </body>
 </html>
