@@ -133,3 +133,33 @@ Boq.utils.qs.adds.off = function (type, cb) {
             it.detachEvent('on' + type, cb);
     })
 };
+
+/**
+ * set or get the width of the selected nodes
+ * @param {string|int} [width]
+ * @returns {int|Boq.Array}
+ */
+Boq.utils.qs.adds.width = function (width) {
+    if (typeof width === 'undefined') { //return width;
+        return this.f().offsetWidth;
+    } else {
+        if (!isNaN(width))
+            width+='px';
+        return this.adds.css.call(this,'width',width);
+    }
+};
+
+/**
+ * set or get the height of the selected nodes
+ * @param {string|int} [height]
+ * @returns {int|Boq.Array}
+ */
+Boq.utils.qs.adds.height = function (height) {
+    if (typeof height === 'undefined') { //return width;
+        return this.f().offsetHeight;
+    } else {
+        if (!isNaN(height))
+            height+='px';
+        return this.adds.css.call(this,'height',height);
+    }
+};
