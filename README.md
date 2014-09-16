@@ -1,4 +1,5 @@
 boq.js
 ======
 
-boq.js utils to mvc page
+Another litle framework.
+boq.js utils to mvc page, single page, etc.
