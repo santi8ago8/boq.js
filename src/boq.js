@@ -310,7 +310,7 @@
     boq.utils.extends(boq, boq.utils, false);
 
     // qs in global scope with name q
-    if (typeof window.q === 'undefined')
+    if (typeof window.q === 'undefined' && typeof define === 'undefined')
         window.q = boq.utils.qs;
 
     /**
