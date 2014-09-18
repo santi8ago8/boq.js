@@ -252,7 +252,7 @@
         },
         /**
          * get an boq.Array with document.querySelector
-         * @param query query selector
+         * @param {string|node|DOMElement|nodeList} query query selector
          * @returns {boq.Array}
          */
         qs: function (query, context) {
