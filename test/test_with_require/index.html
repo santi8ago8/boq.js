@@ -10,11 +10,11 @@
             paths: {
                 domReady: 'domReady',
                 boq: '../../src/boq',
-                'boq/dom': '../../src/boq.dom'
+                'boq.dom': '../../src/boq.dom'
             }
         });
 
-        require(["domReady", 'boq', 'boq/dom'], function (domReady, boq, dom) {
+        require(["domReady", 'boq', 'boq.dom'], function (domReady, boq, dom) {
             boq.debug('boq loaded', boq);
             boq.debug('boq/dom returns boq object, but add the functions to qs', boq.utils.qs.adds);
 

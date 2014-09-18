@@ -170,7 +170,7 @@
     }
 
     if (typeof Boq == 'undefined' && typeof require !== 'undefined') {
-        define('boq/dom',['boq'],function(boq){
+        define('boq.dom',['boq'],function(boq){
             defineDomFunctions(boq);
             return boq;
         })
